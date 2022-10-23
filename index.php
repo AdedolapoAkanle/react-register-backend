@@ -6,7 +6,11 @@
     header("Access-Control-Max-Age: 3600");
     header("Access-Control-Allow-Headers: Content-Type, Access-Control-Allow-Headers, Authorization, X-Requested-with");
     
-    $json = file_get_contents('php://input');
+    // $json = file_get_contents('php://index');
+    // $rest_json = file_get_contents('php://input');
+    $json = file_get_contents('index.php');
+    // echo($rest_json);
+
     $body = json_decode($json, true);
     
     $firstName = $body['firstName'];
