@@ -3,7 +3,8 @@
 // require("user.php");
 
 // $user = new User();
+    
 
-
-//     $user->processUser($_POST['firstName'], $_POST['lastName'], $_POST['address'], $_POST['age'], $_POST['gender']);
+//     $user->processUser($body['firstName'], $body['lastName'], $body['address'], $body['age'], $body['gender']);
 //     echo json_encode("Saved successfully!");
+//     exit;
