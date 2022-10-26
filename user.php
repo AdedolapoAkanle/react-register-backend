@@ -5,8 +5,9 @@ require("config.php");
 class User extends Database
 {
 
-    public $firstName;
-    public $lastName;
+    public $id;
+    public $name;
+    public $email;
     public $address;
     public $age;
     public $gender;
@@ -14,11 +15,19 @@ class User extends Database
     public $result = "";
 
 
-    public function UserInfo($condition = "", $field = "*", $column = "")
+    public function userInfo($condition = "", $field = "*", $column = "")
     {
         return $this->lookUp($this->table, $field, $condition, $column);
     }
 
+    public function updateUserInfo() {
+        $newAge = (int)$this->age;
+        return $this->saveChanges($this->table, "name = '$this->name', 
+        email = '$this->email', 
+        address = '$this->address', 
+        age = $newAge,
+        gender = '$this->gender'", "id='$this->id'");
+    }
     public function countUserRows($conditions)
     {
         return $this->countRows($this->table, "*", $conditions);
@@ -38,12 +47,12 @@ class User extends Database
     public function validateUser()
     {
         $newAge = (int)$this->age;
-        if (empty($this->firstName) || empty($this->lastName) || empty($this->address) || empty($this->age) || empty($this->gender)) {
+        if (empty($this->name) || empty($this->email) || empty($this->address) || empty($this->age) || empty($this->gender)) {
             echo json_encode ("None of the fields must be empty!");
             exit;
         }
         
-        if (is_numeric($this->firstName) || is_numeric($this->lastName) ) {
+        if (is_numeric($this->name) || is_numeric($this->email) ) {
             echo json_encode("Name must be in text only!");
             exit;
         }
@@ -54,20 +63,20 @@ class User extends Database
             exit;
         }
 
-        if (($this->isExists("first_name = '$this->firstName'"))  && ($this->isExists("last_name = '$this->lastName'")) && ($this->isExists("address = '$this->address'"))) {
+        if (($this->isExists("name = '$this->name'"))  && ($this->isExists("email = '$this->email'")) && ($this->isExists("address = '$this->address'"))) {
             echo json_encode("This entry already exists!");
             exit;
         }
 
         
     }
-    public function processUser($firstName, $lastName, $address, $age, $gender)
+    public function processUser($name, $email, $address, $age, $gender)
     {
 
-        // echo json_encode("$firstName, $lastName, $address, $gender, $age"); exit;
+        // echo json_encode("$name, $email, $address, $gender, $age"); exit;
 
-        $this->firstName = $this->escape($firstName);
-        $this->lastName = $this->escape($lastName);
+        $this->name = $this->escape($name);
+        $this->email = $this->escape($email);
         $this->address = $this->escape($address);
         $this->age = $this->escape($age);
         $this->gender = $this->escape($gender);
@@ -81,8 +90,8 @@ class User extends Database
 
         $newAge = (int)$this->age;
         return $this->save($this->table, 
-        "first_name = '$this->firstName', 
-        last_name = '$this->lastName', 
+        "name = '$this->name', 
+        email = '$this->email', 
         address = '$this->address', 
         age = $newAge,
         gender = '$this->gender'");
