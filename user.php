@@ -5,12 +5,12 @@ require("config.php");
 class User extends Database
 {
 
-    public $id;
     public $name;
     public $email;
     public $address;
     public $age;
     public $gender;
+    public $status;
     public $table = "user";
     public $result = "";
 
@@ -20,14 +20,43 @@ class User extends Database
         return $this->lookUp($this->table, $field, $condition, $column);
     }
 
-    public function updateUserInfo() {
-        $newAge = (int)$this->age;
-        return $this->saveChanges($this->table, "name = '$this->name', 
-        email = '$this->email', 
-        address = '$this->address', 
-        age = $newAge,
-        gender = '$this->gender'", "id='$this->id'");
-    }
+    
+    public function singleUserInfo($userId) {
+        $this->result = $this->userInfo("id = '$userId'")[0];
+        $this->name = $this->result['name'];
+        $this->gender = $this->result['gender'];
+        $this->age = $this->result['age'];
+        $this->address = $this->result['address'];
+        $this->status = $this->result['status'];
+
+     }
+
+   
+
+   public function userResult($userId) {
+     $this->singleUserInfo($userId);
+     return $this->result;
+
+   }
+    public function userName($userId) {
+        $this->singleUserInfo($userId);
+        return $this->name;
+     }
+     
+     public function userGender($userId) {
+        $this->singleUserInfo($userId);
+        return $this->gender;
+     }
+     
+     public function userAge($userId) {
+        $this->singleUserInfo($userId);
+        return $this->age;
+     }
+     public function userAddress($userId) {
+        $this->singleUserInfo($userId);
+        return $this->address;
+     }
+     
     public function countUserRows($conditions)
     {
         return $this->countRows($this->table, "*", $conditions);
@@ -63,14 +92,14 @@ class User extends Database
             exit;
         }
 
-        if (($this->isExists("name = '$this->name'"))  && ($this->isExists("email = '$this->email'")) && ($this->isExists("address = '$this->address'"))) {
+        if (($this->isExists("email = '$this->email'"))) {
             echo json_encode("This entry already exists!");
             exit;
         }
 
         
     }
-    public function processUser($name, $email, $address, $age, $gender)
+    public function processUser( $name, $email, $address, $age, $gender)
     {
 
         // echo json_encode("$name, $email, $address, $gender, $age"); exit;
@@ -83,8 +112,10 @@ class User extends Database
 
         $this->validateUser();
         $this->saveUser();
+
     }
 
+    
     public function saveUser()
     {
 
@@ -95,5 +126,11 @@ class User extends Database
         address = '$this->address', 
         age = $newAge,
         gender = '$this->gender'");
+    }
+
+    public function eraseUser($userId)
+    {
+        return $this->erase($this->table, "id = '$userId'"
+        );
     }
 }

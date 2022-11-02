@@ -17,15 +17,6 @@
 
      $user = new User;
 
-    //  if(!empty($col) && !empty($value)){
-    //     $condition = "$col = '%$value%'";
-    //  }else{
-    //     $condition = "";
-    //  }
-
-    //  $rlt = $user->userInfo($condition);
-    //  echo json_encode($rlt);
-
     $user->processUser($name, $email, $address, $age, $gender);
     echo json_encode("saved successfully");
     
